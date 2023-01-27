@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CIS 231 Spell Check Demostration</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Christopher Eelman"/>
+    <meta name="date" content="DATE"/>
+    <meta name="description" content="A TEMPLATE FOR HTML"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script type="text/javascript" src="wordlist.js"></script>
+   <script type="text/javascript">
+     function checkSpelling () {
+       var resultsBox = document.getElementById("results");
+       var textToCheck = document.getElementById("textBox").innerHTML
+       resultsBox.innerHTML = "The wordlist has " + wordlist.length + "words in it"; 
+     } // checkSpelling()
+    </script>
+  </head>
+  <body>
+    Type some text into this box belowe, and click the "check" button for a report of mispelled words.
+    <div id=results></div>
+    <button onclick="checkSpelling();">Check</button><br />
+    <textarea id="textBox" rows="7" cols="40"></textarea>
+  </body>
+  </html>
+
+
+        
+
+        
+
+    
+
+
+
+
+

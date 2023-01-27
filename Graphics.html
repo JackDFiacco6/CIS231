@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CIS 231 Graphics Demonstration</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Jack Fiacco"/>
+    <meta name="date" content="March 22, 2022"/>
+    <meta name="description" content="A TEMPLATE FOR HTML"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script type="text/javascript">
+      var x = 100;
+      var y = 100;
+      var gc;
+      function animateText () {
+        var string = "CIS 231";
+        var distance = 2;
+        var moveX = (Math.random ()*2*distance)-distance;
+        var moveY = (Math.random ()*2*distance)-distance;
+        x += moveX;
+        y += moveY;
+        var newCanvas = document.createElement("canvas");
+        var canvas = document.GetElementById("canvas");
+        newCanvas.width = canvas.width;
+        newCanvas.height = canvas.height;
+        var newgc = newCanvas.getContext("2d");
+        newgc.fillStyle = "#ff0000";
+        newgc.fillRect (5, 5, canvas.width-10,height-10);
+        gc.strokeStyle = "#000000";
+        newgc.font = "30px Comic Sans";
+        newgc.fillText (string, x, y,);
+        var imageData = newgc.getImageData(5,5,canvas.width-10,canvas.height-10);
+        gc.putImageData(imageData,5,5);
+      }
+function main() {
+  var canvas = document.getElementById("canvas");
+  gc = canvas.getContext("2d");
+  var width = canvas.width;
+  var height = canvas.height;
+  // Background and border
+  gc.fillStyle = "#ff0000";
+  gc.fillRect(5,5,width-10,height-10);50
+  gc.strokeStyle = "#ffff00";
+  gc.lineWidth = 10;
+  gc.strokeRect(0,0,width-1,height-1);
+ setInterval
+var maxValue = 0;
+for (let i=0;i<data.length;i++) {
+  if (data[i] > maxValue) maxValue = data[i];
+}
+var scale = (height-20) / (maxValue*1.1);
+var spacing = width / (data.length + 1);
+for (let i=0;i<data.length;i++) {
+  if (i==0) {
+    gc.moveTo(Math.floor(spacing), Math.floor(height-25-(data[i]*scale)));
+  }
+    else {
+      gc.lineTo(Math.floor((i+1)*spacing), Math.floor(height-25-(data[i]*scale)));
+    }
+  }
+  gc.stroke();
+}
+
+</script>
+</head> 
+<body onLoad="main();">
+<canvas id="canvas" width="800" height="600"></canvas>
+<body>
+</html>

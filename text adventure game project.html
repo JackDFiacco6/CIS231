@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="Auther" content="Jack Fiacco" />
+<meta name="date" content="March 29, 2022" />
+<title>Text Adventure Game</title>
+<script type="text/javascript">
+    var i = 0;
+    var log = "";
+    var playerInput = "null";
+    var section;
+    var valuable;
+
+             
+    var Player = {   // This variable keeps track of the player's progress when playing the game.
+		section: 1,
+        Tool: [1, "sword and shield"],
+        Awake: true,
+
+    }
+
+           // These variables gives the decription of the room/situation the player is in. To allow this, i give the room a description
+		   // and by selecting what item the player will discover in the room. I also decide the amount of opportunities the player can search for something.
+    var Room1 = {
+        sectionNumber: 1,
+        Description: "As you get on your feet with the fatigue wearing off, you notice and approach the unlocked chest to see if there are any resources in it <br />that you can trade with a merchant nearby to aquire key items to gain a key item to unlock the door.",
+        valuable: 'One thousand runes',
+        valuableCount: 0,
+            
+        searched : [1, 1],
+    }
+
+    var Room2 = { 
+        sectionNumber: 2,
+        Description: "You were able to unlock the wooden door down with the old chest key, and you are now standing in a corridor that has another door but appears to be locked by a form of magic this time.<br />As you venture around, you notice a wall that appears structurally weak and wonder if something is stored behind it. ",
+        valuableCount: 0,
+        valuable: 'five thousand runes',        
+            
+        searched : [1, 1]
+
+    }
+
+    var Room3 = {  
+        sectionNumber: 3,
+        Description: "After breaking the wall with your sword, you gathered the runes and were able to unlock the magic-sealed door with the Dectus Medallion which you leads you to the outdoors. However, you are immediately confronted by a tree sentinel guarding a dungeon outisde of the catacombs.<br /> In order to reach the dungeon, you will have to defeat the tree sentinel. But you realize that you are not properly equiped for such a foe.<br /> However, you notice there is another chest to your right but appears to be locked. You notice a group of pots that a have a glowing effect inside of them resembling runes you have collected previously. You approach the pots to see if they contain runes so you can exchange for a better weapon.",
+        valuable: 'Ten-thousand runes',
+        valuableCount: 0,
+
+            
+        searched : [1, 1]
+
+    }
+
+    var Room4 = {   
+        sectionNumber: 3,
+        Description: "You have now aquired the moonveil katana and are able to defeat the tree sentinel. As you approach a site of ruins shortly after the tree sentinel, you notice a door that is blocked with fog and has an imp statue beside it requiring another key.<br /> Not knowing what to do, you decide to head back to the tree sentinel. <br />By the body, you notice yet again another glowing light resembling runes and go to loot it.",
+        valuable: 'Twenty-thousand runes',
+        valuableCount: 0,
+
+            
+        searched : [1, 1]
+
+    }
+
+    var Room5 = { 
+		   
+	 
+        sectionNumber: 5,
+        Description: "You aquired the stonesword key and insert it into the imp statue which unlocks the wall of fog. <br /> You are now in a new dungeon and notice the mark of the Elden beast. Down the dungeon there is a wall of green fog that you can enter but there is an unlocked chest in another room to the right of the green fog.<br />Before entering the fog, you decide for it to be a good idea to open the chest to equip a better weapon for fighting such a creature. <br />You open the door and appoach the chest to loot it.",
+        valuable: 'fifty-thousand runes',
+        valuableCount: 0,
+
+            
+        searched : [1, 1]
+
+    }
+
+    var Room6 = {   
+		   
+	
+        sectionNumber: 6,
+        Description: "You aquired the runes which allowed you to equip the comet-azur staff. You traverse the fog and slay the elden beast with ease thanks to your weapon. As the beast falls, you notice a throne and approach it to make your mark as elden lord. ",
+        valuable: 'ELDEN LORD',
+        valuableCount: 0,
+
+            
+        searched : [1, 1]
+    }
+
+    function getSection(){        // This function is what orders the specific room variable, all of this depends on which section the player is undergoing.
+        if (Player.section == 1){
+            return Room1;
+        }
+        if (Player.section == 2){
+            return Room2;
+        }
+        if (Player.section == 3){
+            return Room3;
+        }
+        if (Player.section == 4){
+            return Room4;
+        }
+        if (Player.section == 5){
+            return Room5;
+        }
+        if (Player.section == 6){
+            return Room6;    
+        }
+    }   
+        
+
+        function look(){   // This function allows the player to "observe" the description of the building when the player types in "observe".
+            document.getElementById("storyBox").innerHTML = section.Description;
+
+        }
+
+        function search(){   // This function allows the player to type  "loot" and then the function will take the command and loots the room for valuables.
+            if (((Player.Tool[0] == Player.section) && (section.searched[0] > 0)) && Player.section < 6){
+                section.valuableCount ++;
+                section.searched[0] --;
+                document.getElementById("storyBox").innerHTML = 
+                "You found: " + section.valuable;
+            }else if(Player.section == 6){
+                document.getElementById("storyBox").innerHTML = "You approach the throne and sit in it to claim your title of Elden Lord! The end!";
+            }else{
+                document.getElementById("storyBox").innerHTML = 
+                "There are no more runes to find, consider trading your current runes for a key item to progress!";
+                
+            }
+        }
+
+        function unlock(){   // This function allows the player to "unlock" the door that is sealed with magic in the room they are in. The purpose of this function will also allow you to know if you can open the door or not.
+            if((Player.Tool[0] > section.sectionNumber) && Player.section < 6){
+                Player.section ++;
+                section = getSection();
+                document.getElementById("storyBox").innerHTML = section.Description;
+            }else if (Player.section == 6){
+                document.getElementById("storyBox").innerHTML = "There are no more obstacles to face!"
+            
+            }else{
+                document.getElementById("storyBox").innerHTML = "You do not have a good enough item to progess, search the area for some runes to trade for a better item!"
+            }
+        }
+
+        function trade(){    // This function allows the player to "exchange" their resources for a key item to unlock the door. The key item will differentiate depending on the particular section.
+            var currentTool = Player.Tool[1];
+            if (section.valuableCount == section.searched[1]){
+                if (Player.section == 1){
+                    Player.Tool = [2, "Old Chest Key"];
+                }
+                if (Player.section == 2){
+                    Player.Tool = [3, "Dectus Medallion"];
+                }
+                if (Player.section == 3){
+                    Player.Tool = [4, "Moonveil Katana"];
+                }
+                if (Player.section == 4){
+                    Player.Tool = [5, "Stonesword Key"];
+                }
+                if (Player.section == 5){
+                    Player.Tool = [6, "Comet-Azur Staff"];
+                }
+                document.getElementById("storyBox").innerHTML= "By exchanging your resources that you have looted<BR /> You now possess a " + Player.Tool[1].toUpperCase();
+
+            }else{
+                document.getElementById("storyBox").innerHTML= "By exchanging your resources that you have looted<BR /> You now possess a " + Player.Tool[1].toUpperCase();
+            }
+        }
+
+
+
+        function update(){    // This function gives hints to the player when the player attempts typing in a command.
+            section = getSection();
+            if(playerInput == "observe"){
+                look();
+            }else if(playerInput == "loot"){
+                search();
+            }else if(playerInput == "unlock"){
+                unlock();
+            }else if(playerInput == "exchange"){
+                trade();
+            }else if(playerInput == ""){
+
+            }else{
+                log = log.concat(" -- that is not a command! Try using: observe, loot, unlock, or exchange!");
+            }
+
+            
+
+        }
+
+        function main(){   // Every time the player puts an input in, this function will run and progress the game. 
+            playerInput = document.getElementById("textBox").value.toLowerCase();
+            log = log.concat("<BR />" + playerInput.toUpperCase());
+            update();
+            var html ="<BR />"+
+            "Tool: " + Player.Tool[1]+"<BR />" + log;
+            document.getElementById("responseBox").innerHTML = html;
+            document.getElementById("textBox").value = "";
+            i++;
+
+        }
+
+
+    </script>
+</head>
+<body onload="main()">
+    <h1>Text Adventure Game</h1>
+    <div id = "storyBox">After undergoing a strange vision about becoming an Elden Lord, you wake up in the rock bottom catacombs with no knowledge of your surroundings. <br />
+	You are enclosed in a large room with only a sword and shield, unbreakable walls, and a door sealed shut with what appears to be a merchant near the door. <br />
+	However, there is a chest that appears to be unlocked that could contain valuable resoruces to help you with your journey. <br />
+	Your goal is to escape this room and loot resources to exchange for key items to help pave your path to Elden lord. 
+         
+    </div>
+    <br>
+    <br>
+    <input id="textBox" width="2000px" placeholder="Enter commands here " onchange="main()"></input></body>
+    <br>
+    <br>
+    <br>
+    <div id = "responseBox"></div>
+
+</html>

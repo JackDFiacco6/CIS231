@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CIS 231 Text Adventure Game</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Jack Fiacco"/>
+    <meta name="date" content="March 15, 2022"/>
+    <meta name="description" content="Text Adventure Game"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script type="text/javascript">
+    //var Player = [0, [], 1];
+    // Player [0] = Room #
+    // Player [1] = Inventory Array
+    // Player [2] = Awake (1) or Asleep (0)
+    var Player = {
+      'Room': 0, // single quote names the variable
+      'Inventory' : [], //"Inventory" must match
+      'Awake' : true //function for all comands
+    }
+    function main() {
+      var html = "Room: "+Player.Room+"<BR />"+
+      "Inventory Count:"+Player.Inventory.length+"<BR />"+ //"Inventory" must match
+      "Are you Awake? "+(Player.Awake?"Yes":"No")+"<BR />";
+      document.getElementById("results").innerHTML = html;
+    } 
+</script>   
+</head>
+<body onLoad="main();">
+<div id ="repsonse"></div> //
+<div id="repsonse"><Div>
+
+<DIV id="results"></DIV>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CIS 231 Graphics Demonstration</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Jack Fiacco"/>
+    <meta name="date" content="March 22, 2022"/>
+    <meta name="description" content="A TEMPLATE FOR HTML"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script type="text/javascript">
+var data= [100,90,30,65,77,88,44,80,77,150,50,66,47,23,80];
+function main() {
+  var canvas = document.getElementById("canvas");
+  var gc = canvas.getContext("2d");
+  var width = canvas.width;
+  var height = canvas.height;
+  // Background and border
+  gc.fillStyle = "#ff0000";
+  gc.fillRect(5,5,width-10,height-10);50
+  gc.strokeStyle = "#ffff00";
+  gc.lineWidth = 10;
+  gc.strokeRect(0,0,width-1,height-1);
+ 
+var maxValue = 0;
+for (let i=0;i<data.length;i++) {
+  if (data[i] > maxValue) maxValue = data[i];
+}
+var scale = (height-20) / (maxValue*1.1);
+var spacing = width / (data.length + 1);
+for (let i=0;i<data.length;i++) {
+  if (i==0) {
+    gc.moveTo(Math.floor(spacing), Math.floor(height-25-(data[i]*scale)));
+  }
+    else {
+      gc.lineTo(Math.floor((i+1)*spacing), Math.floor(height-25-(data[i]*scale)));
+    }
+  }
+  gc.stroke();
+}
+
+</script>
+</head> 
+<body onLoad="main();">
+<canvas id="canvas" width="800" height="600"></canvas>
+<body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 1</title>
+    <script type="text/javascript">
+        function buttonFarenheitToCelcius(){
+            var inputBox = document.getElementById("farenheit");
+            var resultBox = document.getElementById("resultTemperature");
+            var inputFarenheit = inputBox.value;
+            var temperature = (inputFarenheit - 32) * (5/9);
+            resultBox.innerHTML = inputFarenheit + " is " + temperature + " in celcius";
+        }
+        function buttonPoundsToKilograms () {
+            var inputBox = document.getElementById("ounces");
+            var resultBox = document.getElementById("resultKilograms");
+            var inputPounds = inputBox.value;
+            var kilograms = inputPounds*0.45;
+            resultBox.innerHTML = inputPounds + " is " + kilograms + " in kilograms";
+        }
+        function buttonInchesToMillimetres() {
+            var inputBox = document.getElementById("inches");
+            var resultBox = document.getElementById("resultMillimetres");
+            var inputInches = inputBox.value;
+            var millimetres = inputInches*25.4;
+            resultBox.innerHTML = inputInches + " is " + millimetres + " in millimetres";
+        }
+        function buttonFeetToMetres() {
+            var inputBox = document.getElementById("feet");
+            var resultBox = document.getElementById("resultMetres");
+            var inputFeet = inputBox.value;
+            var metres = inputFeet*0.3;
+            resultBox.innerHTML = inputFeet + " is " + metres + " in metres";
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <p>Convert Farenheit to Celcius</p>
+        <input type="text" id="farenheit">
+        <button id="buttonFarenheit" onclick="buttonFarenheitToCelcius()">click me</button>
+        <p id="resultTemperature"></p>
+    </div>
+    <div>
+        <p>Convert Pounds to Kilograms</p>
+        <input type="text" id="ounces">
+        <button id="buttonPound"onclick="buttonPoundsToKilograms()">click me</button>
+        <P id= "resultKilograms"></P>
+    </div>
+    <div>
+        <p>Convert Inches to Millimetres</p>
+        <input type="text" id="inches">
+        <button id="buttonInch"onclick="buttonInchesToMillimetres()">click me</button>
+        <p id="resultMillimetres"></p>
+    </div>
+    <div>
+        <p>Convert Feet to Metres</p>
+        <input type="text" id="feet">
+        <button id="buttonFeet"onclick="buttonFeetToMetres()">click me</button>
+        <p id="resultMetres"></p>
+    </div>
+</body>
+</html>

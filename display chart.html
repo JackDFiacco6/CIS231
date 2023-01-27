@@ -1,0 +1,300 @@
+<!DOCTYPE HTML>
+<HTML>
+<HEAD>
+<TITLE>Display charts and graphs from CSV data</TITLE>
+<META charset="UTF-8" />
+<META name="author" content="Jack Fiacco" />
+<SCRIPT type="text/javascript">
+function hoverText(td) {
+	var text = "Date: "+td.parentNode.id+";  "+td.id+": "+td.innerHTML;
+	document.getElementById("hoverdata").innerHTML = text;
+	td = null;
+}
+function displayAsTable(data,header) {
+	var sum = [];
+	var recordCounter = 0;
+	var tableHTML = "<TABLE border=2>";
+	// Implement the header
+	tableHTML += "<TR>";
+	for (index in header) {
+		tableHTML += "<TH>"+header[index]+"</TH>";
+		sum[header[index]] = 0;
+	}
+	tableHTML += "</TR>";
+	// Implement the data
+	for (rowIndex in data) {
+		tableHTML += "<TR id=\""+rowIndex+"\"><TD id=\"rowName\">"+rowIndex+"</TD>";
+		for (fieldIndex in data[rowIndex]) {
+			tableHTML += "<TD id=\""+fieldIndex+"\" onMouseOver=\"hoverText(this);\">"+data[rowIndex][fieldIndex]+"</TD>";
+			sum[fieldIndex] += Number(data[rowIndex][fieldIndex]);
+		}
+		tableHTML += "</TR>";
+		recordCounter++;
+	}
+	// Finalize it 
+	tableHTML += "<TR><TH>AVERAGE:</TH>"
+	for (index in sum) {
+		if (index!="Date")
+			tableHTML += "<TH>"+(sum[index]/recordCounter).toFixed(2)+"</TH>";
+	}
+	tableHTML += "</TR></TABLE>";
+	document.getElementById("fileContents").innerHTML = tableHTML;
+}
+function displayFile() {
+	// Template initiated from lesson 26.
+	// Inspiration for this demo comes from 
+	// Gravelle, Robert. "Read Text Files Using the Javascript FileReader." n.d.
+	// 		Retrieved from https://www.htmlgoodies.com/beyond/javascript/read-text-files-using-the-javascript-filereader.html 13 Oct 2017.
+	// Zakas, Nicholas C. "Working with Files in Javascript, part 2." 15 May 2012.
+	//		Retrieved from https://www.nczonline.net/blog/2012/05/15/working-with-files-in-javascript-part-2/ 13 Oct 2017.
+	
+	// Check for the various File API support.
+	if (window.File && window.FileReader && window.FileList && window.Blob) {
+		//Retrieve the first (and only) File from the FileList object
+		var fileObject = document.getElementById("filePicker").files[0]; 
+
+		if (!fileObject) {
+			alert("Failed to load file");
+		} else if (!fileObject.name.match('.csv')) {
+			alert(fileObject.name + " is not a valid csv file.");
+		} else {
+			// The FileReader is basic and can bw applied to any file.
+			var filePointer = new FileReader();
+			filePointer.onload = function(event) {
+				var csvData = [];
+				var csvLines = event.target.result.split("\r\n");
+				var header = csvLines[0].split(",");
+				for (var lineCounter=1;lineCounter<csvLines.length;lineCounter++) {
+					// Start with 1 due to line 0 being the header line.
+					var thisRow = csvLines[lineCounter].split(",");
+					csvData[thisRow[0]] = [];
+					for (var fieldCounter=1;fieldCounter<thisRow.length;fieldCounter++) {
+						// Start with 1 since the first column is the name of the row.
+						csvData[thisRow[0]][header[fieldCounter]] = thisRow[fieldCounter];
+					}
+				}
+				displayAsTable(csvData,header);
+				graph_Display(csvData,header);
+			};
+			// Once the basic instructions are observed, we can commence the particular file.
+			filePointer.readAsText(fileObject);
+		}
+	} else {
+	  alert('The File APIs are not fully supported by your browser.');
+	}
+}
+	
+function graph_Display(data,header) {  
+	
+	var canvas1 = document.getElementById("canvas1");
+	gc = canvas1.getContext("2d");	 
+	var width = canvas1.width;
+	var height = canvas1.height;
+	
+	gc.fillStyle = "#000000";         
+	gc.fillRect(5,5,width-10,height-10);
+	gc.strokeStyle = "#fefdfe";
+	gc.font = "25px Roboto";
+	gc.strokeText("Temperature", 11, 75);
+	gc.strokeText("95", 11, 180);
+	gc.strokeText("85", 11, 265);   
+	gc.strokeText("75", 11, 340);
+	gc.strokeText("65", 11, 415);
+	gc.strokeText("55", 11, 490);
+	gc.strokeText("45", 11, 565);
+	gc.strokeText("35", 11, 635);
+	gc.strokeText("25", 11, 715);
+	gc.strokeText("15", 11, 785);
+	gc.strokeText("DATE MAY", 10, 830);
+	gc.font = "20px Roboto";
+	gc.strokeText("10", 16, 865);
+	gc.strokeText("11", 58, 865);
+	gc.strokeText("12", 111, 865);
+	gc.strokeText("13", 165, 865);
+	gc.strokeText("14", 205, 865);
+	gc.strokeText("15", 248, 865);
+	gc.strokeText("16", 288, 865);
+	gc.strokeText("17", 328, 865);
+	gc.strokeText("18", 370, 865);
+	gc.strokeText("19", 415, 865);
+	gc.strokeText("20", 460, 865);
+	gc.strokeText("21", 503, 865);
+	gc.strokeText("22", 545, 865);
+	gc.strokeText("23", 605, 865);
+	gc.strokeText("24", 660, 865);
+	gc.strokeText("25", 715, 865);
+	gc.strokeText("26", 750, 865);
+	gc.strokeText("27", 800, 865);
+	gc.strokeText("28", 865, 865);
+	gc.strokeText("29", 905, 865);
+	gc.strokeText("30", 930, 865);
+	gc.strokeStyle = "#C000FF";
+	gc.lineWidth = 11;
+	gc.strokeRect(0,0,width-1,height-1);
+	
+	var maxValue = 0;
+	var recordCounter = 0;
+	for (rowIndex in data) {
+		if (data[rowIndex].Temperature > maxValue) maxValue = data[rowIndex].Temperature; 
+		recordCounter++;
+	}
+	var scale = (height) / (maxValue*1.3);   
+	var spacing = width / (recordCounter);
+	var moveX = 50;
+	gc.beginPath();
+	
+	for (rowIndex in data) {
+		gc.lineTo(Math.floor(moveX),(height-(data[rowIndex].Temperature*scale)))
+		moveX = moveX + spacing;
+	} 
+	gc.stroke();
+	
+	var canvas2 = document.getElementById("canvas2");
+	gc = canvas2.getContext("2d");	 
+	var width = canvas2.width;
+	var height = canvas2.height;
+		
+	gc.fillStyle = "#000000";         
+	gc.fillRect(5,5,width-10,height-10);
+	gc.strokeStyle = "#fefdfe";
+	gc.font = "25px Roboto";
+	gc.strokeText("Humidity", 11, 75);
+	gc.strokeText("95", 11, 180);
+	gc.strokeText("85", 11, 265);   
+	gc.strokeText("75", 11, 340);
+	gc.strokeText("65", 11, 415);
+	gc.strokeText("55", 11, 490);
+	gc.strokeText("45", 11, 565);
+	gc.strokeText("35", 11, 635);
+	gc.strokeText("25", 11, 715);
+	gc.strokeText("15", 11, 785);
+	gc.strokeText("DATE", 11, 835);
+	gc.font = "20px Roboto";
+	gc.strokeText("May 10", 11, 865);
+	gc.strokeText("11", 80, 865);
+	gc.strokeText("12", 115, 865);
+	gc.strokeText("13", 168, 865);
+	gc.strokeText("14", 205, 865);
+	gc.strokeText("15", 248, 865);
+	gc.strokeText("16", 288, 865);
+	gc.strokeText("17", 328, 865);
+	gc.strokeText("18", 370, 865);
+	gc.strokeText("19", 415, 865);
+	gc.strokeText("20", 460, 865);
+	gc.strokeText("21", 503, 865);
+	gc.strokeText("22", 545, 865);
+	gc.strokeText("23", 605, 865);
+	gc.strokeText("24", 660, 865);
+	gc.strokeText("25", 715, 865);
+	gc.strokeText("26", 750, 865);
+	gc.strokeText("27", 800, 865);
+	gc.strokeText("28", 865, 865);
+	gc.strokeText("29", 905, 865);
+	gc.strokeText("30", 930, 865);
+	gc.strokeStyle = "#C000FF";
+	gc.lineWidth = 11;
+	gc.strokeRect(0,0,width-1,height-1);
+	
+	var maxValue = 0;
+	var recordCounter = 0;
+	for (rowIndex in data) {
+		if (data[rowIndex].Humidity > maxValue) maxValue = data[rowIndex].Humidity; 
+		recordCounter++;
+	}
+	var scale = (height) / (maxValue*1.3);   
+	var spacing = width / (recordCounter);
+	var moveX = 50;
+	gc.beginPath();
+	
+	for (rowIndex in data) {
+		gc.lineTo(Math.floor(moveX),(height-(data[rowIndex].Humidity*scale)))
+		moveX = moveX + spacing;
+	} 
+	gc.stroke();
+	
+	var canvas3 = document.getElementById("canvas3");
+	gc = canvas3.getContext("2d");	 
+	var width = canvas3.width;
+	var height = canvas3.height;
+	
+	gc.fillStyle = "#000000";         
+	gc.fillRect(5,5,width-10,height-10);
+	gc.strokeStyle = "#fefdfe";
+	gc.font = "25px Roboto";
+	gc.strokeText("Precipitation", 11, 125);
+	gc.strokeText("1.3", 11, 180);
+	gc.strokeText("0.9", 11, 265);           
+	gc.strokeText("0.8", 11, 340);
+	gc.strokeText("0.7", 11, 415);
+	gc.strokeText("0.6", 11, 490);
+	gc.strokeText("0.5", 11, 565);
+	gc.strokeText("0.4", 11, 635);
+	gc.strokeText("0.3", 11, 715);
+	gc.strokeText("0.2", 11, 785);
+	gc.strokeText("0.1", 11, 845);
+	gc.strokeText("0", 11, 893);
+	gc.strokeText("DATE", 11, 65);
+	gc.font = "20px Roboto";
+	gc.strokeText("May 10", 11, 93);
+	gc.strokeText("11", 83, 93);
+	gc.strokeText("12", 112, 93);
+	gc.strokeText("13", 145, 93);
+	gc.strokeText("14", 185, 93);
+	gc.strokeText("15", 243, 93);
+	gc.strokeText("16", 277, 93);
+	gc.strokeText("17", 343, 93);
+	gc.strokeText("18", 380, 93);
+	gc.strokeText("19", 433, 93);
+	gc.strokeText("20", 483, 93);
+	gc.strokeText("21", 533, 93);
+	gc.strokeText("22", 583, 93);
+	gc.strokeText("23", 633, 93);
+	gc.strokeText("24", 683, 93);
+	gc.strokeText("25", 733, 93);
+	gc.strokeText("26", 780, 93);
+	gc.strokeText("27", 822, 93);
+	gc.strokeText("28", 872, 93);
+	gc.strokeText("29", 920, 93);
+	gc.strokeText("30", 960, 93);
+	gc.strokeStyle = "#C000FF";
+	gc.lineWidth = 11;
+	gc.strokeRect(0,0,width-1,height-1);
+	
+	var maxValue = 0;
+	var recordCounter = 0;
+	for (rowIndex in data) {
+		if (data[rowIndex].Precipitation > maxValue) maxValue = data[rowIndex].Precipitation; 
+		recordCounter++;
+	}
+	var scale = (height) / (maxValue*1.3);   
+	var spacing = width / (recordCounter);
+	var moveX = 50;
+	gc.beginPath();
+	
+	for (rowIndex in data) {
+		gc.lineTo(Math.floor(moveX),(height-(data[rowIndex].Precipitation*scale)))
+		moveX = moveX + spacing;
+	} 
+	
+	gc.stroke();
+}
+
+</SCRIPT>
+</HEAD>
+<BODY>
+Select a CSV file to display as a table below. <BR />
+<INPUT type="file" id="filePicker" /><BUTTON onClick="displayFile();">Load the File</BUTTON>
+<DIV id="hoverdata" style="background: blue; font-weight: bold;"></DIV>
+<DIV id="fileContents">
+
+</DIV>
+<div><canvas id="canvas1" width="900" height="900"></canvas></div>
+<div><canvas id="canvas2" width="900" height="900"></canvas></div>
+<div><canvas id="canvas3" width="900" height="900"></canvas></div>
+<BR />
+This demonstration shows a very simplistic way of converting a CSV to array and table.  To do it right, you should use 
+a library like <a href="http://papaparse.com/">Papa Parse</a>.<BR />
+</BODY>
+</HTML>
+
+
